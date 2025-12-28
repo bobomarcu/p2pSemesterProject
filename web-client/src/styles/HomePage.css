@@ -1,0 +1,113 @@
+.home-page-grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+    height: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+    width: 60vw;
+}
+
+.recent-manifests-column,
+.second-column-container {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Soft shadow for card effect */
+}
+
+.second-column-container {
+    display: grid;
+    grid-template-rows: 1fr 1fr; /* Two rows in the second column */
+    gap: 20px; /* Space between rows in the second column */
+}
+
+.second-column-row-1 {
+    /* Styles for the first row of the second column */
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: #fff;
+    padding: 15px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    display: flex; /* To center content if needed */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.second-column-row-2 {
+    /* Styles for the second row of the second column */
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: #fff;
+    padding: 15px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.recent-manifests-column h3,
+.second-column-row-1 h3,
+.upload-manifest-card h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.upload-manifest-card button {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.upload-manifest-card button:hover {
+    background-color: #0056b3;
+}
+
+.manifest-list-placeholder p {
+    background-color: #e9e9e9;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+}
+
+.button-center-container {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.profile-stats-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stats-grid {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #666;
+}

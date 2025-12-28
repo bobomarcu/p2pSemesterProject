@@ -1,0 +1,105 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #4D5B59; /* Dark blue for navbar */
+    padding: 0 3vw; /* Responsive padding */
+    color: white;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    height: var(--navbar-height);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    box-sizing: border-box; /* Ensure padding is included in the width */
+}
+
+.navbar-brand {
+    color: white;
+    text-decoration: none;
+    font-size: 2.0vmin; /* Adjusted responsive font size */
+    font-weight: bold;
+}
+
+.navbar-links {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-links button {
+    margin-left: 0.8vw; /* Adjusted responsive margin */
+}
+
+.menu-icon {
+    display: none;
+    cursor: pointer;
+}
+
+.menu-icon div {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 5px 0;
+    transition: 0.4s;
+}
+
+.close-icon {
+    display: none;
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 36px;
+    color: white;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 4vmin;
+    }
+
+    .close-icon {
+        display: block;
+    }
+
+    .navbar-links {
+        display: none;
+        flex-direction: column;
+        width: 250px;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        right: -250px;
+        background-color: #001529;
+        padding-top: 60px;
+        transition: right 0.3s ease;
+        align-items: center;
+    }
+
+    .navbar-links.active {
+        display: flex;
+        right: 0;
+    }
+
+    .navbar-links a,
+    .navbar-links button {
+        width: 80%;
+        margin: 10px 0;
+    }
+
+    .navbar-links a button {
+        width: 100%;
+        margin: 0;
+    }
+
+    .menu-icon {
+        display: block;
+    }
+}
+
+.navbar-logo {
+    margin: 1rem;
+    width: 3rem;
+    height: 3rem;
+}

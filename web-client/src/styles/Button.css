@@ -1,0 +1,84 @@
+.button {
+    background-color: #004175; /* Primary purple */
+    border: none;
+    color: white;
+    padding: 1.2vh 2.5vw; /* Responsive padding */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.9rem; /* Adjusted responsive font size */
+    margin: 0.5vh 0.5vw;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button-neutral {
+    background-color: #f0f2f5; /* Light gray */
+    color: #333; /* Dark text */
+    border: 1px solid #d9d9d9; /* Gray border */
+}
+
+.button-neutral:hover {
+    background-color: #e6e6e6; /* Darker gray on hover */
+}
+
+.button-neutral:active {
+    background-color: #d9d9d9; /* Even darker on active */
+}
+
+.button-success {
+    background-color: #52c41a; /* Green for success actions */
+}
+
+.button-success:hover {
+    background-color: #73d13d;
+}
+
+.button-success:active {
+    background-color: #389e08;
+}
+
+.button-danger {
+    background-color: #f5222d; /* Red for danger actions */
+}
+
+.button-danger:hover {
+    background-color: #ff4d4f;
+}
+
+.button-danger:active {
+    background-color: #cf1322;
+}
+
+.button-warning {
+    background-color: #f49223; /* Yellow for warning actions */
+    color: #ffffff;
+}
+
+.button-warning:hover {
+    background-color: #e2aa1b;
+}
+
+.button-warning:active {
+    background-color: #d4961d;
+}
+
+.button:active {
+    background-color: #d4961d;
+}
+
+.button:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    .button {
+        padding: 1.5vh 3vw;
+        font-size: 1rem; /* Adjusted for smaller screens */
+    }
+}

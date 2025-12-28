@@ -1,24 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import Footer from "./components/Footer";
+import NavBar from "./components/NavBar";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import LandingPage from "./views/LandingPage";
+import HomePage from "./views/HomePage";
+import BrowseManifestsPage from "./views/BrowseManifestsPage"; // New import
+import UploadManifestPage from "./views/UploadManifestPage";
+import ProfilePage from "./views/ProfilePage";
+import { useKeycloak } from "@react-keycloak/web";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
+  const { keycloak, initialized } = useKeycloak();
+
+  if (!initialized) {
+      return <div>Loading...</div>;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <BrowserRouter>
+          <div className="App">
+              <NavBar/>
+              <div className={"content"}>
+                  <Routes>
+                      <Route path="/" element={keycloak.authenticated ? <PrivateRoute children={<HomePage/>}/> : <LandingPage/>} />
+                      <Route path="/manifests" element={keycloak.authenticated ? <PrivateRoute children={<BrowseManifestsPage/>}/> : <LandingPage/>} /> {/* New Route */}
+                      <Route path="/upload" element={keycloak.authenticated ? <PrivateRoute children={<UploadManifestPage/>}/> : <LandingPage/>} />
+                      <Route path="/profile" element={keycloak.authenticated ? <PrivateRoute children={<ProfilePage/>}/> : <LandingPage/>} />
+                  </Routes>
+              </div>
+              <Footer/>
+          </div>
+      </BrowserRouter>
   );
 }
 
