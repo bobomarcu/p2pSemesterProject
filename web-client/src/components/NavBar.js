@@ -40,9 +40,6 @@ function Navbar() {
 
                 {keycloak.authenticated && (
                     <>
-                        <Button href={keycloak.createAccountUrl({ redirectUri: window.location.href })}>
-                            {keycloak.tokenParsed.preferred_username}
-                        </Button>
                         <Button onClick={() => keycloak.logout()}>
                             Logout
                         </Button>
