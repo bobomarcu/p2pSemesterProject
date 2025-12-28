@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  p2p-postgres-keycloak:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_keycloak_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    restart: unless-stopped
+
+  p2p-keycloak:
+    build: .
+    depends_on:
+      - p2p-postgres-keycloak
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://p2p-postgres-keycloak:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: password
+
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+
+      KC_PROXY: edge
+    ports:
+      - "8180:8080"
+    restart: unless-stopped
+    command: ["start-dev", "--features=preview,quick-theme"]
+
+volumes:
+  postgres_keycloak_data:
