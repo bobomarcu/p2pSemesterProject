@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: p2pFileTracker
+  datasource:
+    url: jdbc:postgresql://localhost:5432/p2p_tracker
+    username: user
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/P2PFileShare
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  endpoint:
+    prometheus:
+      enabled: true
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+    org.springframework.web.cors: DEBUG
+server:
+  port: 8282
