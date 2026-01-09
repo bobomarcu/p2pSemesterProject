@@ -5,3 +5,4 @@ FROM quay.io/keycloak/keycloak:latest
 RUN echo "Verifying providers directory contents:" && ls -l /opt/keycloak/providers
 
 WORKDIR /opt/keycloak
+#rofl comms
