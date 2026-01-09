@@ -11,4 +11,5 @@ import java.util.List;
 public class GossipRequest {
     private Node sender;
     private List<Node> peers;
+    // TODO: Add list of file manifests or data objects to sync
 }

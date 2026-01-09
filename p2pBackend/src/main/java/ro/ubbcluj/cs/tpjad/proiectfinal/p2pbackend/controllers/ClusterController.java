@@ -23,6 +23,7 @@ public class ClusterController {
 
     @PostMapping("/gossip")
     public ResponseEntity<?> receiveGossip(@RequestBody GossipRequest request) {
+        // TODO: Secure this endpoint (e.g., validate JWT token, checking for trusted peer role)
         clusterService.handleGossip(request);
         return ResponseEntity.ok().build();
     }

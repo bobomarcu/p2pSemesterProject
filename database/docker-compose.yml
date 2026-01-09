@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  p2p_zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    restart: unless-stopped
+
+  p2p_kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    depends_on:
+      - p2p_zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: p2p_zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://p2p_kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    restart: unless-stopped
+
+  p2p_kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    depends_on:
+      - p2p_kafka
+    ports:
+      - "8787:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: p2p_kafka-streaming
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: p2p_kafka:29092
+    restart: unless-stopped
+
+  p2p_postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: p2p_tracker
+    volumes:
+      - p2p_postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+volumes:
+  p2p_postgres_data:

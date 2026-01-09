@@ -1,6 +1,13 @@
 spring:
   application:
     name: p2pBackend
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: p2p-storage-cluster
+      auto-offset-reset: earliest
+
 p2p:
   server:
     bootstrap: 10.0.0.13:7000
+    path: /opt/var/p2psystem/shards/

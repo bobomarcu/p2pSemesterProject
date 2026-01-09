@@ -4,3 +4,4 @@ spring:
 p2p:
   server:
     bootstrap: 10.0.0.13:7000
+    path: /opt/var/p2psystem/shards/

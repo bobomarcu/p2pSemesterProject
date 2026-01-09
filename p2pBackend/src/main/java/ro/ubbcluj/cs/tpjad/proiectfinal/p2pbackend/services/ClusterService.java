@@ -41,12 +41,13 @@ public class ClusterService {
 
         try {
             log.info("Gossiping with {}", target.getId());
+            // TODO: Extend GossipRequest to include file manifests/data for synchronization
             GossipRequest request = new GossipRequest(getSelfNode(), peerList);
             String url = "http://" + target.getHost() + ":" + target.getPort() + "/cluster/gossip";
             restTemplate.postForEntity(url, request, Void.class);
         } catch (Exception e) {
             log.error("Failed to gossip with {}: {}", target.getId(), e.getMessage());
-            // Optionally remove peer if it fails repeatedly (not implemented for simplicity)
+            // TODO: Implement failure detection - remove peer if it fails repeatedly or hasn't updated heartbeat
         }
     }
 
@@ -54,6 +55,7 @@ public class ClusterService {
         log.info("Received gossip from {}", request.getSender().getId());
         mergePeers(request.getPeers());
         mergePeers(List.of(request.getSender()));
+        // TODO: Handle incoming file manifests/data updates - check for new files or updates and download them
     }
 
     private void mergePeers(List<Node> newPeers) {

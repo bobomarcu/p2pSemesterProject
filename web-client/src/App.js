@@ -3,7 +3,7 @@ import NavBar from "./components/NavBar";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import LandingPage from "./views/LandingPage";
 import HomePage from "./views/HomePage";
-import BrowseManifestsPage from "./views/BrowseManifestsPage"; // New import
+import BrowseManifestsPage from "./views/BrowseManifestsPage";
 import UploadManifestPage from "./views/UploadManifestPage";
 import ProfilePage from "./views/ProfilePage";
 import { useKeycloak } from "@react-keycloak/web";
@@ -23,7 +23,7 @@ function App() {
               <div className={"content"}>
                   <Routes>
                       <Route path="/" element={keycloak.authenticated ? <PrivateRoute children={<HomePage/>}/> : <LandingPage/>} />
-                      <Route path="/manifests" element={keycloak.authenticated ? <PrivateRoute children={<BrowseManifestsPage/>}/> : <LandingPage/>} /> {/* New Route */}
+                      <Route path="/browse" element={keycloak.authenticated ? <PrivateRoute children={<BrowseManifestsPage/>}/> : <LandingPage/>} />
                       <Route path="/upload" element={keycloak.authenticated ? <PrivateRoute children={<UploadManifestPage/>}/> : <LandingPage/>} />
                       <Route path="/profile" element={keycloak.authenticated ? <PrivateRoute children={<ProfilePage/>}/> : <LandingPage/>} />
                   </Routes>

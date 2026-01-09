@@ -5,6 +5,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Define global CSS variables for fixed header/footer heights */
+  --navbar-height: 60px; /* Approximate height based on logo and padding */
+  --footer-height: 50px; /* Approximate height based on padding and content */
 }
 
 code {
@@ -13,10 +16,13 @@ code {
 }
 
 .content{
-  margin-top: 10vh;
-  height: 80vh;
-  padding: 10px;
+  /* Adjust margin and min-height to prevent overlap with fixed navbar and footer */
+  margin-top: var(--navbar-height);
+  margin-bottom: var(--footer-height);
+  min-height: calc(100vh - var(--navbar-height) - var(--footer-height));
+  padding: 10px; /* Keep existing padding or adjust as needed */
   display: flex;
   justify-content: center;
-  align-items: center;
+  /* align-items: center; */ /* Remove or adjust if content should align to top */
+  overflow-y: auto; /* Allow scrolling for content that overflows */
 }
