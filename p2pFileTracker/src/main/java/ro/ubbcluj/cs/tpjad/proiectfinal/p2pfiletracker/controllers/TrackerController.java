@@ -64,4 +64,10 @@ public class TrackerController {
         ManifestEntity created = trackerService.uploadFile(request);
         return ResponseEntity.ok(created);
     }
+
+    @PutMapping("/manifests/{id}")
+    public ResponseEntity<ManifestEntity> updateManifest(@PathVariable String id, @RequestBody ro.ubbcluj.cs.tpjad.proiectfinal.p2pfiletracker.dtos.ManifestDTO updates, @AuthenticationPrincipal Jwt jwt) {
+        String userId = jwt.getSubject();
+        return ResponseEntity.ok(trackerService.updateManifest(id, updates, userId));
+    }
 }

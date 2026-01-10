@@ -101,4 +101,18 @@ public class TrackerService {
             }
         });
     }
+
+    @Transactional
+    public ManifestEntity updateManifest(String id, ManifestDTO updates, String userId) {
+        return manifestRepository.findById(id).map(manifest -> {
+            if (!manifest.getUserId().equals(userId)) {
+                throw new RuntimeException("Unauthorized to edit this manifest");
+            }
+            manifest.setName(updates.getName());
+            manifest.setDescription(updates.getDescription());
+            manifest.setPrivate(updates.isPrivate());
+            log.info("Updated manifest {} for UserID: {}", id, userId);
+            return manifestRepository.save(manifest);
+        }).orElseThrow(() -> new RuntimeException("Manifest not found"));
+    }
 }

@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import Button from "../components/Button";
 import { useKeycloak } from "@react-keycloak/web";
 import TrackerService from "../services/TrackerService";
+import P2PService from "../services/P2PService";
+import EditManifestModal from "../components/EditManifestModal";
 import '../styles/ProfilePage.css';
 
 export default function ProfilePage() {
     const { keycloak } = useKeycloak();
     const [stats, setStats] = useState({ uploadCount: 0, totalDownloadsReceived: 0 });
     const [myManifests, setMyManifests] = useState([]);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editingManifest, setEditingManifest] = useState(null);
 
     const username = keycloak.tokenParsed?.preferred_username || "N/A";
     const email = keycloak.tokenParsed?.email || "N/A";
@@ -43,11 +47,47 @@ export default function ProfilePage() {
             try {
                 await TrackerService.deleteManifest(id, keycloak.token);
                 setMyManifests(myManifests.filter(m => m.id !== id));
-                // Update stats locally
                 setStats(prev => ({ ...prev, uploadCount: prev.uploadCount - 1 }));
             } catch (error) {
                 alert("Failed to delete manifest");
             }
+        }
+    };
+
+    const handleDownload = async (manifest) => {
+        try {
+            const blob = await P2PService.downloadFile(manifest.id, manifest.owner, keycloak.token);
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', manifest.name);
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (e) {
+            console.error(e);
+            alert("Download failed: " + e.message);
+        }
+    };
+
+    const openEditModal = (manifest) => {
+        setEditingManifest(manifest);
+        setIsEditModalOpen(true);
+    };
+
+    const closeEditModal = () => {
+        setIsEditModalOpen(false);
+        setEditingManifest(null);
+    };
+
+    const handleSaveEdit = async (id, updatedData) => {
+        try {
+            const updatedManifest = await TrackerService.updateManifest(id, updatedData, keycloak.token);
+            setMyManifests(myManifests.map(m => m.id === id ? updatedManifest : m));
+            closeEditModal();
+        } catch (error) {
+            alert("Failed to update manifest: " + error.message);
         }
     };
 
@@ -113,6 +153,12 @@ export default function ProfilePage() {
                                         </div>
                                     </div>
                                     <div className="upload-actions">
+                                        <Button className="button-neutral" onClick={() => openEditModal(manifest)} style={{marginRight: '8px'}}>
+                                            Edit
+                                        </Button>
+                                        <Button className="button-success" onClick={() => handleDownload(manifest)} style={{marginRight: '8px'}}>
+                                            Download
+                                        </Button>
                                         <Button className="button-danger" onClick={() => handleDelete(manifest.id)}>
                                             Delete
                                         </Button>
@@ -123,6 +169,13 @@ export default function ProfilePage() {
                     )}
                 </div>
             </div>
+            
+            <EditManifestModal 
+                isOpen={isEditModalOpen}
+                manifest={editingManifest}
+                onClose={closeEditModal}
+                onSave={handleSaveEdit}
+            />
         </section>
     );
 }

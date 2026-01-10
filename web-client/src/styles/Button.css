@@ -2,11 +2,11 @@
     background-color: #004175; /* Primary purple */
     border: none;
     color: white;
-    padding: 1.2vh 2.5vw; /* Responsive padding */
+    padding: 0.8vh 1.8vw; /* Responsive padding */
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 0.9rem; /* Adjusted responsive font size */
+    font-size: 0.8rem; /* Adjusted responsive font size */
     margin: 0.5vh 0.5vw;
     cursor: pointer;
     border-radius: 5px;
@@ -78,7 +78,7 @@
 /* Media queries for responsiveness */
 @media (max-width: 768px) {
     .button {
-        padding: 1.5vh 3vw;
-        font-size: 1rem; /* Adjusted for smaller screens */
+        padding: 1vh 2vw;
+        font-size: 0.9rem; /* Adjusted for smaller screens */
     }
 }

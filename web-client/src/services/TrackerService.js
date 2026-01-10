@@ -87,6 +87,27 @@ class TrackerService {
         }
     }
 
+    async updateManifest(id, metadata, token) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/manifests/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(metadata)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error("Error updating manifest:", error);
+            throw error;
+        }
+    }
+
     async uploadManifest(file, metadata, token) {
         // Convert file to Base64
         const toBase64 = file => new Promise((resolve, reject) => {
