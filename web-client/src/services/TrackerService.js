@@ -53,6 +53,40 @@ class TrackerService {
         }
     }
 
+    async getUserManifests(token) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/user/manifests`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error("Error fetching user manifests:", error);
+            throw error;
+        }
+    }
+
+    async deleteManifest(id, token) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/manifests/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        } catch (error) {
+            console.error("Error deleting manifest:", error);
+            throw error;
+        }
+    }
+
     async uploadManifest(file, metadata, token) {
         // Convert file to Base64
         const toBase64 = file => new Promise((resolve, reject) => {

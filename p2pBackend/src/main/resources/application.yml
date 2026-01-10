@@ -1,3 +1,5 @@
+server:
+  port: 5555
 spring:
   application:
     name: p2pBackend
@@ -6,6 +8,11 @@ spring:
     consumer:
       group-id: p2p-storage-cluster
       auto-offset-reset: earliest
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/P2PFileShare
 
 p2p:
   server:
