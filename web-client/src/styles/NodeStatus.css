@@ -1,0 +1,42 @@
+.node-status-popup {
+    position: fixed;
+    bottom: calc(var(--footer-height) + 20px); /* Position above the footer with a 20px margin */
+    right: 20px;
+    background-color: white;
+    padding: 10px 15px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+    font-size: 0.9rem;
+    color: #333;
+    border: 1px solid #eee;
+    transition: transform 0.3s ease;
+}
+
+.node-status-popup:hover {
+    transform: translateY(-2px);
+}
+
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    background-color: #52c41a; /* Green */
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.2);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(82, 196, 26, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 6px rgba(82, 196, 26, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(82, 196, 26, 0);
+    }
+}

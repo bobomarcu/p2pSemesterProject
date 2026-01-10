@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Button from "../components/Button";
 import TrackerService from "../services/TrackerService";
+import P2PService from "../services/P2PService";
 import { useKeycloak } from "@react-keycloak/web";
 import "../styles/BrowseManifestsPage.css"; 
 
@@ -27,6 +28,18 @@ export default function BrowseManifestsPage() {
             fetchManifests();
         }
     }, [keycloak.token]);
+
+    const handleDownload = async (manifest) => {
+        try {
+            // Assuming manifest ID is the file ID for now, or we need to fetch file ID
+            // Ideally manifest has a reference to the file ID in P2P system. 
+            // In the current model, manifest.id matches what's sent to Kafka as payload.fileId.
+            const content = await P2PService.downloadFile(manifest.id, keycloak.token);
+            alert("Download initiated! Content preview: " + content.substring(0, 50) + "...");
+        } catch (e) {
+            alert("Download failed: " + e.message);
+        }
+    };
 
     const filteredManifests = manifests.filter(manifest => 
         manifest.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -73,7 +86,7 @@ export default function BrowseManifestsPage() {
                             <span className="download-info">
                                 <strong>{manifest.downloadCount || 0}</strong> downloads
                             </span>
-                            <Button className="download-button" onClick={() => alert("Download logic coming soon!")}>Download</Button>
+                            <Button className="download-button" onClick={() => handleDownload(manifest)}>Download</Button>
                         </div>
                     </div>
                 ))}

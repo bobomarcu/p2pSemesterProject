@@ -15,6 +15,12 @@ public class NodeController {
         return ResponseEntity.status(HttpStatus.OK).body("node OK");
     }
 
+    @GetMapping("/files/{fileId}")
+    public ResponseEntity<String> downloadFile(@org.springframework.web.bind.annotation.PathVariable String fileId) {
+        // TODO: Implement actual file retrieval logic. For now, returning a mock response.
+        return ResponseEntity.ok("Content of file " + fileId + " from P2P Node.");
+    }
+
 }
 
 
