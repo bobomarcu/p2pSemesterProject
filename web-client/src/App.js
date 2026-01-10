@@ -8,6 +8,7 @@ import UploadManifestPage from "./views/UploadManifestPage";
 import ProfilePage from "./views/ProfilePage";
 import { useKeycloak } from "@react-keycloak/web";
 import PrivateRoute from "./components/PrivateRoute";
+import NodeStatus from "./components/NodeStatus";
 
 function App() {
   const { keycloak, initialized } = useKeycloak();
@@ -28,6 +29,7 @@ function App() {
                       <Route path="/profile" element={keycloak.authenticated ? <PrivateRoute children={<ProfilePage/>}/> : <LandingPage/>} />
                   </Routes>
               </div>
+              <NodeStatus />
               <Footer/>
           </div>
       </BrowserRouter>

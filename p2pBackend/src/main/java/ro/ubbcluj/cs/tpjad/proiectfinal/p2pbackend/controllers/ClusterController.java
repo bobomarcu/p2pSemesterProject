@@ -21,6 +21,11 @@ public class ClusterController {
         return ResponseEntity.status(HttpStatus.OK).body("Cluster OK. Known peers: " + clusterService.getPeers().size());
     }
 
+    @GetMapping("/peers")
+    public ResponseEntity<java.util.List<ro.ubbcluj.cs.tpjad.proiectfinal.p2pbackend.models.Node>> getPeers() {
+        return ResponseEntity.ok(clusterService.getAllNodes());
+    }
+
     @PostMapping("/gossip")
     public ResponseEntity<?> receiveGossip(@RequestBody GossipRequest request) {
         // TODO: Secure this endpoint (e.g., validate JWT token, checking for trusted peer role)

@@ -110,4 +110,10 @@ public class ClusterService {
     public List<Node> getPeers() {
         return new ArrayList<>(peers.values());
     }
+
+    public List<Node> getAllNodes() {
+        List<Node> all = new ArrayList<>(peers.values());
+        all.add(getSelfNode());
+        return all;
+    }
 }
