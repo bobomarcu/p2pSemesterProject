@@ -8,6 +8,10 @@ import ro.ubbcluj.cs.tpjad.proiectfinal.p2pbackend.configurations.ClusterConfigu
 import ro.ubbcluj.cs.tpjad.proiectfinal.p2pbackend.models.GossipRequest;
 import ro.ubbcluj.cs.tpjad.proiectfinal.p2pbackend.models.Node;
 
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import ro.ubbcluj.cs.tpjad.proiectfinal.p2pbackend.grpc.P2PServiceGrpc;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,11 +24,21 @@ public class ClusterService {
 
     private final ClusterConfiguration clusterConfiguration;
     private final Map<String, Node> peers = new ConcurrentHashMap<>();
+    private final Map<String, ManagedChannel> peerChannels = new ConcurrentHashMap<>();
     private final RestTemplate restTemplate = new RestTemplate();
     private final Random random = new Random();
 
     public ClusterService(ClusterConfiguration clusterConfiguration) {
         this.clusterConfiguration = clusterConfiguration;
+    }
+
+    public P2PServiceGrpc.P2PServiceBlockingStub getPeerStub(Node node) {
+        ManagedChannel channel = peerChannels.computeIfAbsent(node.getId(), id -> 
+            ManagedChannelBuilder.forAddress(node.getHost(), node.getGrpcPort())
+                .usePlaintext()
+                .build()
+        );
+        return P2PServiceGrpc.newBlockingStub(channel);
     }
 
     @Scheduled(fixedRate = 5000)
@@ -88,7 +102,9 @@ public class ClusterService {
                     String host = parts[0];
                     int port = Integer.parseInt(parts[1]);
                     // Just send a gossip to bootstrap to register
-                    Node bootstrapNode = new Node(host, port, System.currentTimeMillis());
+                    // Assuming bootstrap has default gRPC port, or we don't know it yet.
+                    // Ideally bootstrap should tell us its gRPC port in response, but for now we just push ours.
+                    Node bootstrapNode = new Node(host, port, 9090, System.currentTimeMillis()); // Default 9090 for bootstrap if unknown
                     GossipRequest request = new GossipRequest(getSelfNode(), new ArrayList<>());
                     String url = "http://" + host + ":" + port + "/cluster/gossip";
                     restTemplate.postForEntity(url, request, Void.class);
@@ -104,7 +120,7 @@ public class ClusterService {
     }
 
     private Node getSelfNode() {
-        return new Node(clusterConfiguration.getHostname(), clusterConfiguration.getServerPort(), System.currentTimeMillis());
+        return new Node(clusterConfiguration.getHostname(), clusterConfiguration.getServerPort(), clusterConfiguration.getGrpcPort(), System.currentTimeMillis());
     }
     
     public List<Node> getPeers() {

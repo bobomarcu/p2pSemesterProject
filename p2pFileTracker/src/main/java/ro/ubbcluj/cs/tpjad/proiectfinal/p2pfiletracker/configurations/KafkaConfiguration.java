@@ -27,7 +27,7 @@ public class KafkaConfiguration {
     }
 
     @Bean
-    public ProducerFactory<String, KafkaFilePayloadDTO> producerFactory(ObjectMapper objectMapper) {
+    public ProducerFactory<String, Object> producerFactory(ObjectMapper objectMapper) {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         // Explicitly passing serializer instances to the factory constructor
@@ -39,7 +39,7 @@ public class KafkaConfiguration {
     }
 
     @Bean
-    public KafkaTemplate<String, KafkaFilePayloadDTO> kafkaTemplate(ObjectMapper objectMapper) {
+    public KafkaTemplate<String, Object> kafkaTemplate(ObjectMapper objectMapper) {
         return new KafkaTemplate<>(producerFactory(objectMapper));
     }
 }

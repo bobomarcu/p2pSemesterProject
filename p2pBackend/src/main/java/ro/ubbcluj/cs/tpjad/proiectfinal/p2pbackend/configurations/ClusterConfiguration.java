@@ -13,6 +13,12 @@ public class ClusterConfiguration{
     @Value("${server.port:8080}")
     private int serverPort;
 
+    @Value("${grpc.server.port:9090}")
+    private int grpcPort;
+
     @Value("${p2p.server.hostname:localhost}")
     private String hostname;
+
+    @Value("${p2p.server.path}")
+    private String storagePath;
 }

@@ -57,12 +57,12 @@ class P2PService {
         }
     }
 
-    async downloadFile(fileId, token) {
+    async downloadFile(fileId, ownerId, token) {
         try {
             const peerUrl = await this.getActivePeer(token);
             console.log(`Downloading file ${fileId} from ${peerUrl}`);
 
-            const response = await fetch(`${peerUrl}/node/files/${fileId}`, {
+            const response = await fetch(`${peerUrl}/node/files/${fileId}?ownerId=${ownerId}`, {
                  headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -75,7 +75,7 @@ class P2PService {
                  }
                  throw new Error(`Download failed from ${peerUrl}: ${response.statusText}`);
             }
-            return await response.text(); // Or blob() if binary
+            return await response.blob();
         } catch (error) {
             console.error("Download error:", error);
             // Clear cookie on error to force rediscovery next time

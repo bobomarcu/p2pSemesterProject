@@ -1,5 +1,6 @@
 package ro.ubbcluj.cs.tpjad.proiectfinal.p2pbackend.configurations;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +15,12 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class WebConfigurations {
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http

@@ -31,12 +31,21 @@ export default function BrowseManifestsPage() {
 
     const handleDownload = async (manifest) => {
         try {
-            // Assuming manifest ID is the file ID for now, or we need to fetch file ID
-            // Ideally manifest has a reference to the file ID in P2P system. 
-            // In the current model, manifest.id matches what's sent to Kafka as payload.fileId.
-            const content = await P2PService.downloadFile(manifest.id, keycloak.token);
-            alert("Download initiated! Content preview: " + content.substring(0, 50) + "...");
+            const blob = await P2PService.downloadFile(manifest.id, manifest.owner, keycloak.token);
+            
+            // Create a temporary link to trigger the download
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', manifest.name); // Use the real filename
+            document.body.appendChild(link);
+            link.click();
+            
+            // Cleanup
+            link.parentNode.removeChild(link);
+            window.URL.revokeObjectURL(url);
         } catch (e) {
+            console.error(e);
             alert("Download failed: " + e.message);
         }
     };
