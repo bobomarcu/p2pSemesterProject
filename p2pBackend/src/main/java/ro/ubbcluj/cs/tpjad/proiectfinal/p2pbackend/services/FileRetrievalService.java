@@ -11,16 +11,23 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.kafka.core.KafkaTemplate;
+import ro.ubbcluj.cs.tpjad.proiectfinal.p2pbackend.dtos.KafkaDownloadEventDTO;
+
 @Service
 @Slf4j
 public class FileRetrievalService {
 
     private final ClusterService clusterService;
     private final ShardStorageService shardStorageService;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+    
+    private static final String KAFKA_TOPIC_DOWNLOAD = "p2p-file-downloads";
 
-    public FileRetrievalService(ClusterService clusterService, ShardStorageService shardStorageService) {
+    public FileRetrievalService(ClusterService clusterService, ShardStorageService shardStorageService, KafkaTemplate<String, Object> kafkaTemplate) {
         this.clusterService = clusterService;
         this.shardStorageService = shardStorageService;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     public byte[] retrieveAndReconstruct(String fileId, String ownerId) throws IOException {
@@ -39,6 +46,16 @@ public class FileRetrievalService {
         }
 
         log.info("Successfully reconstructed file {}", fileId);
+        
+        // Notify Tracker about download
+        try {
+            KafkaDownloadEventDTO downloadEvent = new KafkaDownloadEventDTO(fileId, System.currentTimeMillis());
+            kafkaTemplate.send(KAFKA_TOPIC_DOWNLOAD, fileId, downloadEvent);
+            log.info("Published download event for fileId: {}", fileId);
+        } catch (Exception e) {
+            log.error("Failed to publish download event for fileId: {}", fileId, e);
+        }
+        
         return outputStream.toByteArray();
     }
 
