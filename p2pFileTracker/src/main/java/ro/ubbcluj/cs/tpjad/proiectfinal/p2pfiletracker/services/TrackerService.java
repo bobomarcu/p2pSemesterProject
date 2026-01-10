@@ -12,17 +12,19 @@ import ro.ubbcluj.cs.tpjad.proiectfinal.p2pfiletracker.repositories.ManifestRepo
 
 import ro.ubbcluj.cs.tpjad.proiectfinal.p2pfiletracker.dtos.UserStatsDTO;
 
+import ro.ubbcluj.cs.tpjad.proiectfinal.p2pfiletracker.dtos.KafkaFileDeleteDTO;
+
 @Service
 @Slf4j
 public class TrackerService {
 
     private final ManifestRepository manifestRepository;
-    private final KafkaTemplate<String, KafkaFilePayloadDTO> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate; // Changed to Object to support multiple types
     
-    // TODO: externalize this to application.yml
-    private static final String KAFKA_TOPIC = "p2p-file-uploads";
+    private static final String KAFKA_TOPIC_UPLOAD = "p2p-file-uploads";
+    private static final String KAFKA_TOPIC_DELETE = "p2p-file-deletes";
 
-    public TrackerService(ManifestRepository manifestRepository, KafkaTemplate<String, KafkaFilePayloadDTO> kafkaTemplate) {
+    public TrackerService(ManifestRepository manifestRepository, KafkaTemplate<String, Object> kafkaTemplate) {
         this.manifestRepository = manifestRepository;
         this.kafkaTemplate = kafkaTemplate;
     }
@@ -53,11 +55,13 @@ public class TrackerService {
         );
 
         // 3. Send to Kafka
-        kafkaTemplate.send(KAFKA_TOPIC, entity.getId(), payload);
-        log.info("Published file payload to Kafka topic: {}", KAFKA_TOPIC);
+        kafkaTemplate.send(KAFKA_TOPIC_UPLOAD, entity.getId(), payload);
+        log.info("Published file payload to Kafka topic: {}", KAFKA_TOPIC_UPLOAD);
 
         return entity;
     }
+
+    // ... (getAllPublicManifests, getTop5, getUserStats, getUserManifests methods) ...
 
     public java.util.List<ManifestEntity> getAllPublicManifests() {
         return manifestRepository.findByIsPrivateFalse();
@@ -85,6 +89,12 @@ public class TrackerService {
             if (manifest.getUserId().equals(userId)) {
                 manifestRepository.delete(manifest);
                 log.info("Deleted manifest {} for UserID: {}", manifestId, userId);
+                
+                // Trigger P2P deletion
+                KafkaFileDeleteDTO deletePayload = new KafkaFileDeleteDTO(manifestId, manifest.getOwner());
+                kafkaTemplate.send(KAFKA_TOPIC_DELETE, manifestId, deletePayload);
+                log.info("Published delete event to Kafka topic: {}", KAFKA_TOPIC_DELETE);
+                
             } else {
                 log.warn("User {} attempted to delete manifest {} owned by {}", userId, manifestId, manifest.getUserId());
                 throw new RuntimeException("Unauthorized to delete this manifest");

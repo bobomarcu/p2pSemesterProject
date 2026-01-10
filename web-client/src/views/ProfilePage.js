@@ -57,7 +57,7 @@ export default function ProfilePage() {
                 <Button to="/">Back to Home</Button>
             </div>
             
-            <div className="profile-header">
+            <div className="profile-section profile-header">
                 <div className="profile-avatar">
                     {avatarInitial}
                 </div>
@@ -77,7 +77,7 @@ export default function ProfilePage() {
             </div>
 
             <div className="profile-content">
-                <div className="stats-container">
+                <div className="profile-section">
                     <h3>Analytics</h3>
                     <div className="profile-stats-grid">
                         <div className="profile-stat-card">
@@ -91,28 +91,28 @@ export default function ProfilePage() {
                     </div>
                 </div>
 
-                <div className="user-manifests-container" style={{marginTop: '2rem'}}>
+                <div className="profile-section">
                     <h3>My Uploads</h3>
                     {myManifests.length === 0 ? (
-                        <p>You haven't uploaded any files yet.</p>
+                        <p style={{ color: '#7f8c8d', fontStyle: 'italic' }}>You haven't uploaded any files yet.</p>
                     ) : (
-                        <div className="manifest-grid">
+                        <div className="upload-list">
                             {myManifests.map((manifest) => (
-                                <div key={manifest.id} className="manifest-card">
-                                    <div className="card-header">
-                                        <h4>{manifest.name}</h4>
-                                        <span className={manifest.private ? "badge-private" : "badge-public"}>
-                                            {manifest.private ? "Private" : "Public"}
-                                        </span>
+                                <div key={manifest.id} className="upload-item">
+                                    <div className="upload-info">
+                                        <div className="upload-name">
+                                            {manifest.name}
+                                            <span style={{marginLeft: '10px'}} className={manifest.private ? "badge badge-private" : "badge badge-public"}>
+                                                {manifest.private ? "Private" : "Public"}
+                                            </span>
+                                        </div>
+                                        <div className="upload-meta">
+                                            <span>{new Date(manifest.uploadedAt).toLocaleDateString('en-GB')}</span>
+                                            <span>•</span>
+                                            <span>{manifest.downloadCount || 0} downloads</span>
+                                        </div>
                                     </div>
-                                    <p className="manifest-desc">{manifest.description}</p>
-                                    <div className="manifest-meta">
-                                        <span className="meta-date">{new Date(manifest.uploadedAt).toLocaleDateString()}</span>
-                                        <span className="download-info">
-                                            <strong>{manifest.downloadCount || 0}</strong> downloads
-                                        </span>
-                                    </div>
-                                    <div className="manifest-actions">
+                                    <div className="upload-actions">
                                         <Button className="button-danger" onClick={() => handleDelete(manifest.id)}>
                                             Delete
                                         </Button>

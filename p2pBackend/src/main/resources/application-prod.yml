@@ -16,5 +16,5 @@ spring:
 
 p2p:
   server:
-    bootstrap: 10.0.0.13:5555
-    path: /opt/var/p2psystem/shards/
+    bootstrap: localhost:5555
+    path: /Users/bogdan.marcu/shards

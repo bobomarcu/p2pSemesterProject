@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class Node {
     private String host;
     private int port;
+    private int grpcPort;
     private long lastHeartbeat;
     
     // Identifier could be host:port

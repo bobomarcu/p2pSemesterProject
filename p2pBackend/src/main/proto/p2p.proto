@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package ro.ubbcluj.cs.tpjad.proiectfinal.p2pbackend.grpc;
+
+option java_multiple_files = true;
+option java_package = "ro.ubbcluj.cs.tpjad.proiectfinal.p2pbackend.grpc";
+
+service P2PService {
+  rpc StoreShard (ShardRequest) returns (ShardResponse);
+  rpc GetShard (ShardId) returns (ShardResponse);
+  rpc DeleteShard (ShardId) returns (ShardResponse);
+}
+
+message ShardRequest {
+  string shardId = 1;
+  string documentId = 2;
+  string ownerId = 3;
+  bytes content = 4;
+}
+
+message ShardResponse {
+  bool success = 1;
+  string message = 2;
+  bytes content = 3;
+}
+
+message ShardId {
+  string shardId = 1;
+  string documentId = 2;
+  string ownerId = 3;
+}
