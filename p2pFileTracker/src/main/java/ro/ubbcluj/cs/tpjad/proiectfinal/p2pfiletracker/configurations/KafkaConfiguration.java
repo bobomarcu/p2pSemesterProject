@@ -30,6 +30,7 @@ public class KafkaConfiguration {
     public ProducerFactory<String, Object> producerFactory(ObjectMapper objectMapper) {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        configProps.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, "20971520"); // 20MB
         // Explicitly passing serializer instances to the factory constructor
         return new DefaultKafkaProducerFactory<>(
                 configProps,

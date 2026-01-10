@@ -87,6 +87,6 @@ public class ShardStorageService {
         public String shardId;
         public String documentId;
         public String ownerId;
-        public String content; // Base64 encoded
+        public String content;
     }
 }
