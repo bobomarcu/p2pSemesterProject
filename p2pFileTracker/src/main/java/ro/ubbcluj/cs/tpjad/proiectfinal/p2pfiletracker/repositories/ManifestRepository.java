@@ -13,6 +13,8 @@ public interface ManifestRepository extends JpaRepository<ManifestEntity, String
 
     long countByOwner(String owner);
     long countByUserId(String userId);
+    
+    List<ManifestEntity> findByUserId(String userId);
 
     @Query("SELECT COALESCE(SUM(m.downloadCount), 0) FROM ManifestEntity m WHERE m.owner = :owner")
     long sumDownloadsByOwner(String owner);

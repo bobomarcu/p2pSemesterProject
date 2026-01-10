@@ -42,6 +42,19 @@ public class TrackerController {
         return ResponseEntity.ok(trackerService.getUserStats(userId));
     }
 
+    @GetMapping("/user/manifests")
+    public ResponseEntity<java.util.List<ManifestEntity>> getUserManifests(@AuthenticationPrincipal Jwt jwt) {
+        String userId = jwt.getSubject();
+        return ResponseEntity.ok(trackerService.getUserManifests(userId));
+    }
+
+    @DeleteMapping("/manifests/{id}")
+    public ResponseEntity<Void> deleteManifest(@PathVariable String id, @AuthenticationPrincipal Jwt jwt) {
+        String userId = jwt.getSubject();
+        trackerService.deleteManifest(id, userId);
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/upload")
     public ResponseEntity<ManifestEntity> uploadFile(@RequestBody FileUploadRequestDTO request, @AuthenticationPrincipal Jwt jwt) {
         String userId = jwt.getSubject();

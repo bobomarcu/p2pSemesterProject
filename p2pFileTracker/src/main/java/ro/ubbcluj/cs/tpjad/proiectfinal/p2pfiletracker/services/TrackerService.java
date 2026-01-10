@@ -74,4 +74,21 @@ public class TrackerService {
         log.info("Stats for {}: uploads={}, downloads={}", userId, uploadCount, totalDownloads);
         return new UserStatsDTO(uploadCount, totalDownloads);
     }
+
+    public java.util.List<ManifestEntity> getUserManifests(String userId) {
+        return manifestRepository.findByUserId(userId);
+    }
+
+    @Transactional
+    public void deleteManifest(String manifestId, String userId) {
+        manifestRepository.findById(manifestId).ifPresent(manifest -> {
+            if (manifest.getUserId().equals(userId)) {
+                manifestRepository.delete(manifest);
+                log.info("Deleted manifest {} for UserID: {}", manifestId, userId);
+            } else {
+                log.warn("User {} attempted to delete manifest {} owned by {}", userId, manifestId, manifest.getUserId());
+                throw new RuntimeException("Unauthorized to delete this manifest");
+            }
+        });
+    }
 }

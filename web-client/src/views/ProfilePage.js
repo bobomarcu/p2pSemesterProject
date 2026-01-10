@@ -7,6 +7,7 @@ import '../styles/ProfilePage.css';
 export default function ProfilePage() {
     const { keycloak } = useKeycloak();
     const [stats, setStats] = useState({ uploadCount: 0, totalDownloadsReceived: 0 });
+    const [myManifests, setMyManifests] = useState([]);
 
     const username = keycloak.tokenParsed?.preferred_username || "N/A";
     const email = keycloak.tokenParsed?.email || "N/A";
@@ -19,19 +20,36 @@ export default function ProfilePage() {
     const playerId = keycloak.tokenParsed?.sub;
 
     useEffect(() => {
-        const fetchStats = async () => {
+        const fetchData = async () => {
             if (playerId && keycloak.token) {
                 try {
                     await keycloak.updateToken(30);
-                    const data = await TrackerService.getUserStats(keycloak.token);
-                    setStats(data);
+                    const [statsData, manifestsData] = await Promise.all([
+                        TrackerService.getUserStats(keycloak.token),
+                        TrackerService.getUserManifests(keycloak.token)
+                    ]);
+                    setStats(statsData);
+                    setMyManifests(manifestsData);
                 } catch (error) {
-                    console.error("Failed to load user stats", error);
+                    console.error("Failed to load user data", error);
                 }
             }
         };
-        fetchStats();
+        fetchData();
     }, [playerId, keycloak, keycloak.token]);
+
+    const handleDelete = async (id) => {
+        if (window.confirm("Are you sure you want to delete this manifest?")) {
+            try {
+                await TrackerService.deleteManifest(id, keycloak.token);
+                setMyManifests(myManifests.filter(m => m.id !== id));
+                // Update stats locally
+                setStats(prev => ({ ...prev, uploadCount: prev.uploadCount - 1 }));
+            } catch (error) {
+                alert("Failed to delete manifest");
+            }
+        }
+    };
 
     return (
         <section className="profile-page-container">
@@ -71,6 +89,38 @@ export default function ProfilePage() {
                             <span className="stat-label">Downloads Received</span>
                         </div>
                     </div>
+                </div>
+
+                <div className="user-manifests-container" style={{marginTop: '2rem'}}>
+                    <h3>My Uploads</h3>
+                    {myManifests.length === 0 ? (
+                        <p>You haven't uploaded any files yet.</p>
+                    ) : (
+                        <div className="manifest-grid">
+                            {myManifests.map((manifest) => (
+                                <div key={manifest.id} className="manifest-card">
+                                    <div className="card-header">
+                                        <h4>{manifest.name}</h4>
+                                        <span className={manifest.private ? "badge-private" : "badge-public"}>
+                                            {manifest.private ? "Private" : "Public"}
+                                        </span>
+                                    </div>
+                                    <p className="manifest-desc">{manifest.description}</p>
+                                    <div className="manifest-meta">
+                                        <span className="meta-date">{new Date(manifest.uploadedAt).toLocaleDateString()}</span>
+                                        <span className="download-info">
+                                            <strong>{manifest.downloadCount || 0}</strong> downloads
+                                        </span>
+                                    </div>
+                                    <div className="manifest-actions">
+                                        <Button className="button-danger" onClick={() => handleDelete(manifest.id)}>
+                                            Delete
+                                        </Button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </section>
