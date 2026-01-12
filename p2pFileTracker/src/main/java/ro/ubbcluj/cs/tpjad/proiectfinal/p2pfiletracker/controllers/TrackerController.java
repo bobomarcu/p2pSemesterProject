@@ -59,7 +59,6 @@ public class TrackerController {
     public ResponseEntity<ManifestEntity> uploadFile(@RequestBody FileUploadRequestDTO request, @AuthenticationPrincipal Jwt jwt) {
         String userId = jwt.getSubject();
         log.info("Upload request for UserID from Token: {}", userId);
-        // Overwrite userId with the one from the token
         request.getMetadata().setUserId(userId);
         ManifestEntity created = trackerService.uploadFile(request);
         return ResponseEntity.ok(created);

@@ -44,24 +44,21 @@ public class ClusterService {
     @Scheduled(fixedRate = 5000)
     public void gossip() {
         if (peers.isEmpty()) {
-            // Try to join via bootstrap if no peers and bootstrap is set
             joinViaBootstrap();
             return;
         }
 
-        // Pick a random peer
         List<Node> peerList = new ArrayList<>(peers.values());
         Node target = peerList.get(random.nextInt(peerList.size()));
 
         try {
             log.info("Gossiping with {}", target.getId());
-            // TODO: Extend GossipRequest to include file manifests/data for synchronization
             GossipRequest request = new GossipRequest(getSelfNode(), peerList);
             String url = "http://" + target.getHost() + ":" + target.getPort() + "/cluster/gossip";
             restTemplate.postForEntity(url, request, Void.class);
         } catch (Exception e) {
             log.error("Failed to gossip with {}: {}", target.getId(), e.getMessage());
-            // TODO: Implement failure detection - remove peer if it fails repeatedly or hasn't updated heartbeat
+            // TODO: Implement failure detection, remove peer if it fails repeatedly or hasn't updated heartbeat
         }
     }
 
@@ -69,14 +66,13 @@ public class ClusterService {
         log.info("Received gossip from {}", request.getSender().getId());
         mergePeers(request.getPeers());
         mergePeers(List.of(request.getSender()));
-        // TODO: Handle incoming file manifests/data updates - check for new files or updates and download them
     }
 
     private void mergePeers(List<Node> newPeers) {
         if (newPeers == null) return;
         for (Node node : newPeers) {
             if (node.getId().equals(getSelfNode().getId())) {
-                continue; // Skip self
+                continue;
             }
             peers.merge(node.getId(), node, (existing, replacement) -> {
                 if (replacement.getLastHeartbeat() > existing.getLastHeartbeat()) {
@@ -90,7 +86,7 @@ public class ClusterService {
     private void joinViaBootstrap() {
         String bootstrap = clusterConfiguration.getBootstrapServer();
         if (bootstrap != null && !bootstrap.isEmpty()) {
-            // Avoid bootstrapping with self if I am the bootstrap node
+
             String selfId = getSelfNode().getId();
             if (bootstrap.equals(selfId)) {
                 return; 
@@ -101,16 +97,12 @@ public class ClusterService {
                 try {
                     String host = parts[0];
                     int port = Integer.parseInt(parts[1]);
-                    // Just send a gossip to bootstrap to register
-                    // Assuming bootstrap has default gRPC port, or we don't know it yet.
-                    // Ideally bootstrap should tell us its gRPC port in response, but for now we just push ours.
                     Node bootstrapNode = new Node(host, port, 9090, System.currentTimeMillis()); // Default 9090 for bootstrap if unknown
                     GossipRequest request = new GossipRequest(getSelfNode(), new ArrayList<>());
                     String url = "http://" + host + ":" + port + "/cluster/gossip";
                     restTemplate.postForEntity(url, request, Void.class);
                     log.info("Sent join request to bootstrap {}", bootstrap);
                     
-                    // Add bootstrap as known peer
                     peers.put(bootstrapNode.getId(), bootstrapNode);
                 } catch (Exception e) {
                     log.error("Failed to join via bootstrap {}: {}", bootstrap, e.getMessage());

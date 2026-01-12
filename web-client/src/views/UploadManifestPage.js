@@ -17,7 +17,6 @@ export default function UploadManifestPage() {
     const handleFileChange = (e) => {
         if (e.target.files && e.target.files.length > 0) {
             setFile(e.target.files[0]);
-            // Auto-fill name if empty
             if (!name) {
                 setName(e.target.files[0].name);
             }

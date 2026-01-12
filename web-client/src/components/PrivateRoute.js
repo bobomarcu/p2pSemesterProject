@@ -13,7 +13,6 @@ function PrivateRoute({ children }) {
                 })
                 .catch((error) => {
                     console.error('Failed to load user info in PrivateRoute:', error);
-                    // Optionally, log out or show an error message
                     keycloak.logout();
                 });
         } else if (initialized && !keycloak.authenticated) {
@@ -22,7 +21,7 @@ function PrivateRoute({ children }) {
     }, [keycloak, initialized]);
 
     if (!initialized || !userInfoLoaded) {
-        return <div>Loading Keycloak user info...</div>; // Or a loading spinner
+        return <div>Loading Keycloak user info...</div>;
     }
 
     if (!keycloak.authenticated) {

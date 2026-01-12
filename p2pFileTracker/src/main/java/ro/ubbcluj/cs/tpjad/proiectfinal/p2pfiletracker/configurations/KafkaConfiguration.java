@@ -24,7 +24,6 @@ public class KafkaConfiguration {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
     
-    // Add consumer group id if not present in properties or hardcode for this service
     @Value("${spring.kafka.consumer.group-id:p2p-tracker-service}")
     private String groupId;
 

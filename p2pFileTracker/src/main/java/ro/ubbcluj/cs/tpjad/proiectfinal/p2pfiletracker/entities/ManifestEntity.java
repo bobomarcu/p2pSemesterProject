@@ -20,10 +20,10 @@ public class ManifestEntity {
     @Column(length = 1000)
     private String description;
     
-    private String owner; // Username for display
+    private String owner;
     
     @Column(name = "user_id")
-    private String userId; // Keycloak Subject ID for logic
+    private String userId;
     
     private boolean isPrivate;
     

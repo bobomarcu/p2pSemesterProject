@@ -28,7 +28,7 @@ public class ShardStorageService {
 
     public void saveShard(String shardId, String documentId, String ownerId, byte[] content) throws IOException {
         String basePath = clusterConfiguration.getStoragePath();
-        // Path: parentPathFromConfig/ownerId/documentId/shardId.json
+
         Path dirPath = Paths.get(basePath, ownerId, documentId);
         Files.createDirectories(dirPath);
 
@@ -65,10 +65,9 @@ public class ShardStorageService {
             boolean deleted = Files.deleteIfExists(filePath);
             if (deleted) {
                 log.info("Deleted shard {} at {}", shardId, filePath);
-                // Clean up empty directories if possible (optional)
                 try {
-                    Files.deleteIfExists(Paths.get(basePath, ownerId, documentId)); // delete doc dir if empty
-                    Files.deleteIfExists(Paths.get(basePath, ownerId)); // delete owner dir if empty
+                    Files.deleteIfExists(Paths.get(basePath, ownerId, documentId));
+                    Files.deleteIfExists(Paths.get(basePath, ownerId));
                 } catch (IOException ignored) {}
             } else {
                 log.warn("Shard {} not found for deletion at {}", shardId, filePath);
