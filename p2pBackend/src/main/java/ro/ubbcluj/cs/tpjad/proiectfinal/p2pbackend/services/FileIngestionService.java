@@ -22,12 +22,10 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 public class FileIngestionService {
 
     private final ClusterService clusterService;
-    private final ShardStorageService shardStorageService;
     private final ObjectMapper objectMapper;
 
-    public FileIngestionService(ClusterService clusterService, ShardStorageService shardStorageService, ObjectMapper objectMapper) {
+    public FileIngestionService(ClusterService clusterService, ObjectMapper objectMapper) {
         this.clusterService = clusterService;
-        this.shardStorageService = shardStorageService;
         this.objectMapper = objectMapper;
     }
 
@@ -40,14 +38,13 @@ public class FileIngestionService {
             byte[] fileContent = Base64.getDecoder().decode(payload.getContentBase64());
             log.info("Decoded file size: {} bytes", fileContent.length);
             
-            // Shard into 4 sections
             int totalSize = fileContent.length;
             int shardSize = (int) Math.ceil((double) totalSize / 4);
             
             for (int i = 0; i < 4; i++) {
                 int start = i * shardSize;
                 int end = Math.min(start + shardSize, totalSize);
-                if (start >= totalSize) break; // Should not happen if size > 0
+                if (start >= totalSize) break;
 
                 byte[] shardContent = Arrays.copyOfRange(fileContent, start, end);
                 String shardId = payload.getFileId() + "_" + i;
@@ -75,26 +72,6 @@ public class FileIngestionService {
 
         for (Node node : selectedNodes) {
             try {
-                // If storing to self, use local service to save overhead
-                // Note: comparing ID might need exact port match. getAllNodes includes self with correct ports.
-                // Assuming ClusterService.getSelfNode() matches one of the nodes or is added to list.
-                // Actually getAllNodes adds self.
-                
-                // Ideally we check if node is local. 
-                // Simple check: host is localhost/hostname and ports match. 
-                // Or just use gRPC for everyone for simplicity and uniformity, 
-                // but local optimization is requested in plan.
-                // Since I cannot easily check "is this me" perfectly without a dedicated ID in config,
-                // I will use the ID string comparison if configured correctly.
-                
-                // But wait, ClusterService generates self node on the fly. 
-                // Let's assume we just use gRPC for now to ensure it works, 
-                // or try-catch the storage service if it's "localhost".
-                
-                // Using gRPC for all is safer for this prototype stage to ensure correct protocol usage.
-                // However, I will try to use local if possible.
-                // Let's stick to gRPC distribution as requested ("sharding should go with grpc").
-                
                 log.info("Replicating shard {} to node {}", shardId, node.getId());
                 clusterService.getPeerStub(node).storeShard(ShardRequest.newBuilder()
                         .setShardId(shardId)

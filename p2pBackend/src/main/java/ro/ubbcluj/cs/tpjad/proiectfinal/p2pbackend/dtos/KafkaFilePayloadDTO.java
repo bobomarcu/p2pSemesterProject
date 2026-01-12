@@ -4,9 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * The payload sent to the Kafka topic for the P2P Cluster to consume.
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

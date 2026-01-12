@@ -70,7 +70,7 @@ public class FileRetrievalService {
         }
 
         // 2. Query peers via gRPC
-        List<Node> peers = clusterService.getPeers(); // Don't need self since we already checked local
+        List<Node> peers = clusterService.getPeers();
         for (Node peer : peers) {
             try {
                 log.debug("Querying node {} for shard {}", peer.getId(), shardId);

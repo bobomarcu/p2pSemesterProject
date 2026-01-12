@@ -32,7 +32,6 @@ public class FileDeletionService {
         KafkaFileDeleteDTO payload = objectMapper.convertValue(record.value(), KafkaFileDeleteDTO.class);
         log.info("Received delete request for file: {} (Owner: {})", payload.getFileId(), payload.getOwnerId());
         
-        // Broadcast delete to all peers (including self if routed that way, but we do local first)
         deleteLocally(payload.getFileId(), payload.getOwnerId());
         broadcastDelete(payload.getFileId(), payload.getOwnerId());
     }
@@ -53,13 +52,10 @@ public class FileDeletionService {
 
         for (Node peer : peers) {
             try {
-                // Delete all 4 shards
                 for (int i = 0; i < 4; i++) {
                     String shardId = fileId + "_" + i;
                     log.info("Requesting node {} to delete shard {}", peer.getId(), shardId);
                     
-                    // We can fire and forget, or wait. Fire and forget is faster for broadcast.
-                    // But blocking stub waits.
                     ShardResponse response = clusterService.getPeerStub(peer).deleteShard(
                             ShardId.newBuilder()
                                     .setShardId(shardId)
