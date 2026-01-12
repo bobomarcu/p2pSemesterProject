@@ -35,7 +35,6 @@ public class TrackerService {
         
         log.info("Uploading file for UserID: {}", meta.getUserId());
 
-        // 1. Save metadata to DB
         ManifestEntity entity = new ManifestEntity(
                 meta.getName(),
                 meta.getDescription(),
@@ -46,7 +45,6 @@ public class TrackerService {
         entity = manifestRepository.save(entity);
         log.info("Saved manifest with ID: {} for UserID: {}", entity.getId(), entity.getUserId());
 
-        // 2. Prepare payload for Kafka
         KafkaFilePayloadDTO payload = new KafkaFilePayloadDTO(
                 entity.getId(),
                 entity.getName(),
@@ -54,7 +52,6 @@ public class TrackerService {
                 request.getFileContentBase64()
         );
 
-        // 3. Send to Kafka
         kafkaTemplate.send(KAFKA_TOPIC_UPLOAD, entity.getId(), payload);
         log.info("Published file payload to Kafka topic: {}", KAFKA_TOPIC_UPLOAD);
 
