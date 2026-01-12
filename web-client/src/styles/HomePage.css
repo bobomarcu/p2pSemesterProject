@@ -8,10 +8,10 @@
 }
 
 .recent-manifests-column {
-    background: #f8f8f8; /* Changed to match UploadPage container */
+    background: #f8f8f8;
     padding: 1.5rem;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Slightly stronger shadow */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .recent-manifests-column h3 {
@@ -32,7 +32,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    background: #fff; /* White against the gray container */
+    background: #fff;
     border: 1px solid #ddd;
     border-radius: 6px;
     box-shadow: 0 1px 2px rgba(0,0,0,0.05);
@@ -71,7 +71,7 @@
 }
 
 .upload-manifest-card, .profile-stats-container {
-    background: #f8f8f8; /* Changed to match UploadPage container */
+    background: #f8f8f8;
     padding: 1.5rem;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);

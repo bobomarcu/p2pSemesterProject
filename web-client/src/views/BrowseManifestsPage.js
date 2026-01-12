@@ -33,15 +33,13 @@ export default function BrowseManifestsPage() {
         try {
             const blob = await P2PService.downloadFile(manifest.id, manifest.owner, keycloak.token);
             
-            // Create a temporary link to trigger the download
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', manifest.name); // Use the real filename
+            link.setAttribute('download', manifest.name);
             document.body.appendChild(link);
             link.click();
             
-            // Cleanup
             link.parentNode.removeChild(link);
             window.URL.revokeObjectURL(url);
         } catch (e) {

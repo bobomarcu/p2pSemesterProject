@@ -1,6 +1,6 @@
 .node-status-popup {
     position: fixed;
-    bottom: calc(var(--footer-height) + 20px); /* Position above the footer with a 20px margin */
+    bottom: calc(var(--footer-height) + 20px);
     right: 20px;
     background-color: white;
     padding: 10px 15px;

@@ -24,7 +24,6 @@ class P2PService {
     async getActivePeer(token) {
         let peerHost = this.getCookie(this.cookieName);
         
-        // If no cookie, fetch from bootstrap and set it
         if (!peerHost) {
             peerHost = await this.discoverAndSelectPeer(token);
         }
@@ -48,11 +47,10 @@ class P2PService {
             const selected = peers[Math.floor(Math.random() * peers.length)];
             const hostUrl = `http://${selected.host}:${selected.port}`;
             
-            this.setCookie(this.cookieName, hostUrl, 7); // Save for 7 days
+            this.setCookie(this.cookieName, hostUrl, 7);
             return hostUrl;
         } catch (error) {
             console.error("Peer discovery failed:", error);
-            // Fallback to bootstrap if discovery fails
             return BOOTSTRAP_URL;
         }
     }

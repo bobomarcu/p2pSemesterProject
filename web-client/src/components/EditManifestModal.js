@@ -7,7 +7,6 @@ const EditManifestModal = ({ manifest, isOpen, onClose, onSave }) => {
     const [description, setDescription] = useState(manifest ? manifest.description : '');
     const [isPrivate, setIsPrivate] = useState(manifest ? manifest.private : false);
 
-    // Update local state when manifest prop changes
     React.useEffect(() => {
         if (manifest) {
             setName(manifest.name);

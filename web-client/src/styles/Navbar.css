@@ -2,8 +2,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #4D5B59; /* Dark blue for navbar */
-    padding: 0 3vw; /* Responsive padding */
+    background-color: #4D5B59;
+    padding: 0 3vw;
     color: white;
     position: fixed;
     width: 100%;
@@ -12,13 +12,13 @@
     height: var(--navbar-height);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     z-index: 1000;
-    box-sizing: border-box; /* Ensure padding is included in the width */
+    box-sizing: border-box;
 }
 
 .navbar-brand {
     color: white;
     text-decoration: none;
-    font-size: 2.0vmin; /* Adjusted responsive font size */
+    font-size: 2.0vmin;
     font-weight: bold;
 }
 
@@ -28,7 +28,7 @@
 }
 
 .navbar-links button {
-    margin-left: 0.8vw; /* Adjusted responsive margin */
+    margin-left: 0.8vw;
 }
 
 .menu-icon {

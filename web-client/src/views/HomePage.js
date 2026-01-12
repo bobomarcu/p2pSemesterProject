@@ -12,7 +12,6 @@ export default function HomePage(){
 
     useEffect(() => {
         if (keycloak.token) {
-            // Fetch Top 5 Manifests
             const fetchPopular = async () => {
                 try {
                     const data = await TrackerService.getTop5Manifests(keycloak.token);
@@ -24,7 +23,6 @@ export default function HomePage(){
                 }
             };
 
-            // Fetch User Stats
             const fetchStats = async () => {
                 try {
                     const data = await TrackerService.getUserStats(keycloak.token);
