@@ -222,6 +222,37 @@ Pentru a rula sistemul complet pe o mașină locală, se utilizează următoarel
 
 ---
 
-## 7. Concluzii
+## 7. Scenariu de Testare Manuală
+
+Pentru a verifica funcționalitatea completă a sistemului, urmați pașii de mai jos după ce ați pornit toate componentele (conform secțiunii 6).
+
+### 7.1. Accesare și Autentificare
+1.  Deschideți browserul la adresa `http://localhost:3000`.
+2.  Veți fi redirecționat automat către pagina de login Keycloak.
+3.  Autentificați-vă cu credențialele configurate (ex: utilizator `student`, parolă `student`).
+4.  După autentificare, veți fi redirecționat pe pagina principală (Home).
+
+### 7.2. Încărcarea unui Fișier (Upload)
+1.  Din bara de navigare, selectați **"Upload Manifest"**.
+2.  Introduceți un nume și o descriere pentru fișier.
+3.  Selectați fișierul dorit de pe disc (de preferat un fișier text sau o imagine pentru o verificare ușoară).
+4.  Apăsați butonul **"Upload"**.
+5.  *Verificare:* Dacă monitorizați terminalul `p2pBackend`, veți observa log-uri indicând primirea și fragmentarea fișierului (`Receiving shard...`, `Storing shard...`).
+
+### 7.3. Descărcarea Fișierului (Download)
+1.  Navigați la pagina **"Browse Manifests"**.
+2.  Identificați fișierul încărcat anterior în listă.
+3.  Apăsați butonul **"Download"** asociat fișierului.
+4.  Sistemul va interoga nodurile, va reconstrui fișierul din fragmente și va iniția descărcarea în browser.
+5.  Deschideți fișierul descărcat și comparați-l cu originalul pentru a confirma integritatea datelor.
+
+### 7.4. Ștergerea Fișierului
+1.  Mergeți la pagina **"Profile"** pentru a vedea fișierele deținute de dvs.
+2.  Apăsați butonul de ștergere (Trash icon) pentru fișierul dorit.
+3.  Fișierul va dispărea din listă, iar nodurile backend vor șterge fragmentele asociate de pe disc.
+
+---
+
+## 8. Concluzii
 
 Proiectul demonstrează implementarea cu succes a unui sistem distribuit complex. Arhitectura aleasă permite scalarea orizontală a stocării prin adăugarea de noi noduri în clusterul P2P, fără a afecta serviciul de metadate. Utilizarea protocolului gRPC asigură o comunicare rapidă și eficientă între noduri, iar Kafka decuplează procesul de încărcare de cel de procesare, oferind reziliență la vârfuri de sarcină. Interfața React oferă o experiență fluidă, gestionând inteligent conexiunile către nodurile distribuite.
